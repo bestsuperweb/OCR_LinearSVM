@@ -29,7 +29,7 @@ for training_name in training_names:
     class_path = imutils.imlist(dir)
     image_paths+=class_path
     image_classes+=[class_id]*len(class_path)
-    class_id+=1
+    class_id += 1
 
 # Create feature extraction and keypoint detector objects
 fea_det = cv2.FeatureDetector_create("SIFT")
@@ -56,13 +56,13 @@ voc, variance = kmeans(descriptors, k, 1)
 # Calculate the histogram of features
 im_features = np.zeros((len(image_paths), k), "float32")
 for i in xrange(len(image_paths)):
-    words, distance = vq(des_list[i][1],voc)
+    words, distance = vq(des_list[i][1], voc)
     for w in words:
         im_features[i][w] += 1
 
 # Perform Tf-Idf vectorization
 nbr_occurences = np.sum( (im_features > 0) * 1, axis = 0)
-idf = np.array(np.log((1.0*len(image_paths)+1) / (1.0*nbr_occurences + 1)), 'float32')
+idf = np.array(np.log((1.0 * len(image_paths) + 1) / (1.0 * nbr_occurences + 1)), 'float32')
 
 # Scaling the words
 stdSlr = StandardScaler().fit(im_features)
@@ -73,4 +73,4 @@ clf = LinearSVC()
 clf.fit(im_features, np.array(image_classes))
 
 # Save the SVM
-joblib.dump((clf, training_names, stdSlr, k, voc), "bof.pkl", compress=3)
+joblib.dump((clf, training_names, stdSlr, k, voc), "bof.pkl", compress = 3)
